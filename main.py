@@ -26,11 +26,14 @@ class FlappingRayDialog(QtWidgets.QDialog):
 		self.resize(400, 600)
 		self.setStyleSheet('background-color: #59EBE8;')
 
+		self.stackedWidget = QtWidgets.QStackedWidget()
 		self.mainLayout = QtWidgets.QVBoxLayout(self)
 		self.mainLayout.setAlignment(QtCore.Qt.AlignCenter)
 
-		self.buttonLayout = QtWidgets.QVBoxLayout()
+		self.menuPage = QtWidgets.QWidget()
+		self.buttonLayout = QtWidgets.QVBoxLayout(self.menuPage)
 		self.buttonLayout.setAlignment(QtCore.Qt.AlignCenter)
+		self.buttonLayout.addStretch()
 
 		self.startButton = QtWidgets.QPushButton('Start')
 		self.startButton.setStyleSheet('''
@@ -74,9 +77,14 @@ class FlappingRayDialog(QtWidgets.QDialog):
 
 		self.buttonLayout.addWidget(self.startButton)
 		self.buttonLayout.addWidget(self.cancelButton)
-
+		self.buttonLayout.addStretch()
 		self.mainLayout.addLayout(self.buttonLayout)
+		self.mainLayout.addWidget(self.stackedWidget)
+		self.stackedWidget.addWidget(self.menuPage)
+
 	def startGame(self):
+		self.stackedWidget.removeWidget(self.menuPage)
+		self.menuPage.deleteLater()
 		self.gameWindow = game.FlappingGame(parent=self)
 		self.gameWindow.show()
 
