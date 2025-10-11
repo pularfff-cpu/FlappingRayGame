@@ -27,10 +27,10 @@ class FlappingRayDialog(QtWidgets.QDialog):
 		self.setStyleSheet('background-color: #59EBE8;')
 
 		self.mainLayout = QtWidgets.QVBoxLayout(self)
-		self.mainLayout.setAlignment(QtCore.Qt.AlignCenter)  # <<< จัดกลางทั้ง layout
+		self.mainLayout.setAlignment(QtCore.Qt.AlignCenter)
 
 		self.buttonLayout = QtWidgets.QVBoxLayout()
-		self.buttonLayout.setAlignment(QtCore.Qt.AlignCenter)  # <<< จัดกลางปุ่มด้วย
+		self.buttonLayout.setAlignment(QtCore.Qt.AlignCenter)
 
 		self.startButton = QtWidgets.QPushButton('Start')
 		self.startButton.setStyleSheet('''
