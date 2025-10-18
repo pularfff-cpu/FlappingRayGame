@@ -1,10 +1,12 @@
 from PySide6 import QtCore, QtGui, QtWidgets
 import random
 
+ROOT_RESOURCE_DIR = 'C:/Users/User/Documents/maya/2025/scripts/FlappingRay/resource'
+
 class FlappingGame(QtWidgets.QWidget):
 	def __init__(self, parent=None):
 		super().__init__(parent)
-		self.setWindowTitle("Flapping Bird")
+		self.setWindowTitle("Flapping Ray")
 		self.resize(400, 600)
 		self.setStyleSheet("background-color: skyblue;")
 
@@ -18,6 +20,10 @@ class FlappingGame(QtWidgets.QWidget):
 		self.score = 0
 		self.passed_pipe = False
 		self.is_game_over = False
+		self.bird_pixmap = QtGui.QPixmap(f"{ROOT_RESOURCE_DIR}/image/ray.png")
+		self.pipe_top_pixmap = QtGui.QPixmap(f"{ROOT_RESOURCE_DIR}/image/pipe_up.png")
+		self.pipe_bottom_pixmap = QtGui.QPixmap(f"{ROOT_RESOURCE_DIR}/image/pipe_down.png")
+
 
 	# ==== ตั้ง Timer สำหรับอัปเดตเกม ====
 		self.timer = QtCore.QTimer()
@@ -60,22 +66,38 @@ class FlappingGame(QtWidgets.QWidget):
 	def mousePressEvent(self, event):
 		if not self.is_game_over:
 			self.bird_speed = -7
+	
 	# วาดภาพทั้งหมด
 	def paintEvent(self, event):
 		painter = QtGui.QPainter(self)
+		
 		# วาดนก
-		painter.setBrush(QtGui.QBrush(QtGui.QColor("yellow")))
-		painter.drawEllipse(100, self.bird_y, 30, 30)
+		if not self.bird_pixmap.isNull():
+			painter.drawPixmap(100, int(self.bird_y), 40, 40, self.bird_pixmap)
+		else:
+			painter.setBrush(QtGui.QBrush(QtGui.QColor("yellow")))
+			painter.drawEllipse(100, self.bird_y, 30, 30)
 
 		# วาดท่อ
-		painter.setBrush(QtGui.QBrush(QtGui.QColor("green")))
-		painter.drawRect(self.pipe_x, 0, 60, self.pipe_height)
-		painter.drawRect(
-			self.pipe_x,
-			self.pipe_height + self.pipe_gap,
-			60,
-			600 - self.pipe_height - self.pipe_gap
-		)
+		if not self.pipe_top_pixmap.isNull() and not self.pipe_bottom_pixmap.isNull():
+			painter.drawPixmap(self.pipe_x, 0, 60, self.pipe_height, self.pipe_top_pixmap)
+			painter.drawPixmap(
+				self.pipe_x,
+				self.pipe_height + self.pipe_gap,
+				60,
+				600 - self.pipe_height - self.pipe_gap,
+				self.pipe_bottom_pixmap
+			)
+		else:
+		# fallback ถ้าโหลดรูปไม่ได้
+			painter.setBrush(QtGui.QBrush(QtGui.QColor("green")))
+			painter.drawRect(self.pipe_x, 0, 60, self.pipe_height)
+			painter.drawRect(
+				self.pipe_x,
+				self.pipe_height + self.pipe_gap,
+				60,
+				600 - self.pipe_height - self.pipe_gap
+			)
 
 		# วาดคะแนน
 		painter.setPen(QtGui.QPen(QtCore.Qt.black))
@@ -114,7 +136,7 @@ class FlappingGame(QtWidgets.QWidget):
 
 		self.update()
 
-	# 💥 ตรวจจับชนท่อหรือพื้น / เพดาน
+	# ตรวจจับชนท่อหรือพื้น / เพดาน
 	def checkCollision(self):
 		bird_rect = QtCore.QRect(100, int(self.bird_y), 30, 30)
 		top_pipe_rect = QtCore.QRect(self.pipe_x, 0, 60, self.pipe_height)
