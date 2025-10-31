@@ -64,7 +64,7 @@ class FlappingGame(QtWidgets.QWidget):
             self.game_over_pixmap = QtGui.QPixmap(game_over_icon_path)
            
             self.game_over_pixmap = self.game_over_pixmap.scaled(
-                 200, 100, # ขนาดที่ต้องการ
+                 200, 100,
                  QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation
              )
 
@@ -179,7 +179,7 @@ class FlappingGame(QtWidgets.QWidget):
             try:
                 cmds.setAttr(f"{self.MAYA_SPHERE_NAME}.translateX", self.MAYA_X_POS) # <---
             except Exception as e:
-                print(f"ไม่สามารถตั้งค่า X: {e}")
+                print(f"can't set Attr X: {e}")
                 self.maya_sphere_exists = False
 
     def updateGame(self):
